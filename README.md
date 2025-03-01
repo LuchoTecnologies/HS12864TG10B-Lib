@@ -68,4 +68,5 @@ It gets values from 0 to 255.
 Please note that the connector is flipped compared to the datasheet and the pin numeration in the LCD connector. Connector flip depends on the manufacturer of the conector and the footprint desingner. Manually check if you should flip your connector.
 
 **Installing the Library**
+
 Just download zip and uncompress at libraries folder, or add the header file to your project folder.

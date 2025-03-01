@@ -1,0 +1,23 @@
+{
+    "name": "HS12864TG10B",
+    "keywords": "LCD, ST7567",
+    "description": "Drive HS12864TG10B",
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/LuchoTecnologies/HS12864TG10B-Lib"
+    },
+    "authors":
+    {
+        "name": "Lucho Tecnologies",
+		"email": "missing@gmail.com",
+        "url": "missing",
+        "maintainer": true
+    },
+    "version": "1.0.0",
+    "license": "MIT",
+    "homepage": "https://missing.com",
+    "frameworks": "arduino",
+    "platforms": "*"
+}
+

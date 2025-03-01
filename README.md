@@ -31,7 +31,7 @@ This will send all the setup commands to the screen.
     display.flip(bool);
 This flips the display upside down. You can call this whenever you want, is a software thing. Hardware fliping will be implemented soon. Note, this is here because the rotate method from adafruit gfx doesnt work, so don't waste time trying it.
 
-**Sending Data to de display**
+**Sending Data to the display**
 
 Clear the display buffer:
 

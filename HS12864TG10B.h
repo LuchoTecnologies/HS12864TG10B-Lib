@@ -8,8 +8,8 @@
 //COLORS:
 
 #define HS12864_BLACK 0
-#define HS12864_WHITE 0
-#define HS12864_INVERSE 0
+#define HS12864_WHITE 1
+#define HS12864_INVERSE 2
 
 
 

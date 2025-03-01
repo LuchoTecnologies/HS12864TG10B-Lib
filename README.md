@@ -45,6 +45,12 @@ it does literally the same, so use the one you like the most.
 **Drawing Things**
 To draw thing, you can use anything from the AdafruitGFX library, such as `display.fillRect()` or `display.println()`
 
+*Colors*
+This is a monochrome screen, so there are only two colors, black and white. You can use 1 and 0 respectively, or use `HS12864_BLACK` and `HS12864_WHITE` , like the SSD1306 library.
+
+`HS12864_INVERSE` is also avaiable. It wil, obviusly, invert that pixel. You can replace it with a 2
+
+ 
 **Contrast Config**
 you can change the contrast of the LCD whenever you want, just use 
 

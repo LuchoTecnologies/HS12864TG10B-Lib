@@ -32,6 +32,7 @@ This will send all the setup commands to the screen.
 This flips the display upside down. You can call this whenever you want, is a software thing. Hardware fliping will be implemented soon. Note, this is here because the rotate method from adafruit gfx doesnt work, so don't waste time trying it.
 
 **Sending Data to de display**
+
 Clear the display buffer:
 
     display.clearDisplay();
@@ -43,6 +44,7 @@ Send the dispaly buffer:
 it does literally the same, so use the one you like the most.
 
 **Drawing Things**
+
 To draw thing, you can use anything from the AdafruitGFX library, such as `display.fillRect()` or `display.println()`
 
 *Colors*
@@ -53,6 +55,7 @@ This is a monochrome screen, so there are only two colors, black and white. You 
 
  
 **Contrast Config**
+
 you can change the contrast of the LCD whenever you want, just use 
 
     display.setContrast(88);

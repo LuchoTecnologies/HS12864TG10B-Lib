@@ -26,7 +26,7 @@ void delayNS(uint32_t ns) {
 
 class HS12864TG10B : public Adafruit_GFX {
 private:
-  uint8_t pin_sda, pin_sck, pin_cs, pin_a0, pin_rst;
+  uint8_t pin_sda, pin_sck, pin_cs, pin_a0, pin_rst, pin_light;
   bool screenflip;
 public : using Adafruit_GFX::Adafruit_GFX;  // Heredar constructor
   void clearDisplay() {
@@ -61,6 +61,8 @@ public:
   void updateDisplay();
   void flip(bool value);
   void setContrast(uint8_t value);
+  void setBrightness(uint8_t brightness);
+  void lightPin(int pin);
 };
 
 void HS12864TG10B::writeCommand(uint8_t cmd) {
@@ -135,6 +137,10 @@ void HS12864TG10B::flip(bool value) {
   screenflip = value;
 }
 
+void HS12864TG10B::lightPin(int pin){
+	pinMode(pin, OUTPUT);
+	pin_light = pin;
+}
 
 void HS12864TG10B::setContrast(uint8_t value) {
   uint8_t contrast = map(value, 0, 255, 0 , 63);
@@ -142,3 +148,20 @@ void HS12864TG10B::setContrast(uint8_t value) {
   writeCommand(0x81);  // Set contrast
   writeCommand(contrast);  // VOP (ajustar según pruebas)
 }
+#ifdef ESP32
+void HS12864TG10B::setBrightness(uint8_t brightness) {
+  if (brightness == 0) {
+    ledcDetachPin(pin_light);
+    digitalWrite(pin_light, LOW);
+  } else {
+    ledcAttachPin(pin_light, 0);
+    ledcSetup(0, 5000, 8);
+    ledcWrite(0, brightness);
+  }
+}
+#else
+void HS12864TG10B::setBrightness(uint8_t brightness) {
+	Serial.println("Only avaiable for ESP32");
+}
+#endif
+

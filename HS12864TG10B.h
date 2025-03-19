@@ -1,7 +1,9 @@
 //HS HS12864TG10B driver library with Adafruit_GFX. Written by Lucho Tecnologies with the help of chatGpt :P
-//Last edit 1/03/25 - 16:35
+//Last edit 19/03/25 - 20:15
 
 //COM SPEED. Min delay recomended in datasheet is 50ns
+#ifndef HW_HS12864TG10B
+#define HW_HS12864TG10B
 
 #define SPI_DELAY_NS 55
 
@@ -63,6 +65,15 @@ public:
   void setContrast(uint8_t value);
   void setBrightness(uint8_t brightness);
   void lightPin(int pin);
+  uint8_t* getBuffer() {
+    return screenBuffer;
+  }
+  void writeRawBuffer(const uint8_t* data, size_t length) {
+    if (length > sizeof(screenBuffer)) {
+        length = sizeof(screenBuffer); // Evitar overflow
+    }
+    memcpy(screenBuffer, data, length);
+  }
 };
 
 void HS12864TG10B::writeCommand(uint8_t cmd) {
@@ -165,3 +176,4 @@ void HS12864TG10B::setBrightness(uint8_t brightness) {
 }
 #endif
 
+#endif

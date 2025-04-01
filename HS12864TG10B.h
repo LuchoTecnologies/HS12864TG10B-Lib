@@ -19,7 +19,8 @@
 #include <Adafruit_GFX.h>
 
 uint8_t screenBuffer[128 * 8] = { 0 };  // Inicializa el buffer en 0
-
+uint8_t* screenBuffer2;
+bool inTransition;
 //HS12864TG10B display;  class declaration example
 
 void delayNS(uint32_t ns) {
@@ -32,7 +33,11 @@ private:
   bool screenflip;
 public : using Adafruit_GFX::Adafruit_GFX;  // Heredar constructor
   void clearDisplay() {
-    memset(screenBuffer, 0, sizeof(screenBuffer));
+	  if(!inTransition){
+		memset(screenBuffer, 0, sizeof(screenBuffer));
+	  }else{
+		memset(screenBuffer2, 0, sizeof(screenBuffer));
+	  }
   }
   void display() {
     updateDisplay();
@@ -52,13 +57,23 @@ public:
     if (x >= 128 || y >= 64 || x < 0 || y < 0) return;  // Fuera de rango
     uint16_t index = (y / 8) * 128 + x;
     uint8_t bitMask = 1 << (y % 8);
-    if (color == 1)
-      screenBuffer[index] |= bitMask;  // Encender píxel
-    else if (color == 0) {
-      screenBuffer[index] &= ~bitMask;  // Apagar píxel
-    } else {
-      screenBuffer[index] ^= bitMask;  // Invertir píxel
-    }
+	if(!inTransition){
+		if (color == 1)
+		  screenBuffer[index] |= bitMask;  // Encender píxel
+		else if (color == 0) {
+		  screenBuffer[index] &= ~bitMask;  // Apagar píxel
+		} else {
+		  screenBuffer[index] ^= bitMask;  // Invertir píxel
+		}
+	}else{
+		if (color == 1)
+		  screenBuffer2[index] |= bitMask;  // Encender píxel
+		else if (color == 0) {
+		  screenBuffer2[index] &= ~bitMask;  // Apagar píxel
+		} else {
+		  screenBuffer2[index] ^= bitMask;  // Invertir píxel
+		}
+	}
   }
   void updateDisplay();
   void flip(bool value);
@@ -68,11 +83,83 @@ public:
   uint8_t* getBuffer() {
     return screenBuffer;
   }
+  void begin(){
+	init();
+  }
   void writeRawBuffer(const uint8_t* data, size_t length) {
     if (length > sizeof(screenBuffer)) {
         length = sizeof(screenBuffer); // Evitar overflow
     }
     memcpy(screenBuffer, data, length);
+  }
+  
+  void startTransitionWrite(){
+	  inTransition = true;
+	  screenBuffer2 = (uint8_t*)malloc(128 * 8);
+	  memset(screenBuffer2, 0, 128 * 8);
+  }
+  
+  uint8_t drawTransition(int step){
+	//draw first buffer
+	uint8_t total = 0;
+	
+	for (uint8_t page = 0; page < 8; page++) {
+		int npage = page - step;
+		if(npage >= 0){
+			writeCommand(0xB0 | page);  // Seleccionar página
+			writeCommand(0x10);         // Dirección de columna alta
+			writeCommand(0x00);         // Dirección de columna baja
+			for (uint8_t col = 0; col < 128; col++) {
+				writeData(screenBuffer[npage * 128 + col]);
+			}
+			total++;
+		}else{
+			/*
+			writeCommand(0xB0 | page);  // Seleccionar página
+			writeCommand(0x10);         // Dirección de columna alta
+			writeCommand(0x00);         // Dirección de columna baja
+			for (uint8_t col = 0; col < 128; col++) {
+				writeData(0x00);
+			}*/
+		}
+	}
+	
+	for (uint8_t page = 0; page < 8; page++) {
+		int npage = page + 8 - step;
+		if(npage < 8){
+			writeCommand(0xB0 | page);  // Seleccionar página
+			writeCommand(0x10);         // Dirección de columna alta
+			writeCommand(0x00);         // Dirección de columna baja
+			for (uint8_t col = 0; col < 128; col++) {
+				writeData(screenBuffer2[npage * 128 + col]);
+			}
+			total++;
+		}
+	}
+	/*
+	
+	//draw second buffer
+	for (uint8_t page = 0; page < 8; page++) {
+		uint8_t npage = page + step;
+		if(npage < 8){
+			writeCommand(0xB0 | npage);  // Seleccionar página
+			writeCommand(0x10);         // Dirección de columna alta
+			writeCommand(0x00);         // Dirección de columna baja
+			for (uint8_t col = 0; col < 128; col++) {
+				writeData(screenBuffer2[npage * 128 + col]);
+			}
+			total++;
+		}
+		
+	}
+	*/
+	
+	return total;
+  }
+  
+  void endTransition(){
+	  inTransition = false;
+	  free(screenBuffer2);
   }
 };
 

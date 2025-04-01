@@ -66,7 +66,7 @@ It gets values from 0 to 255.
 
 You can make transitions using
 
-    display.startTransitionWrite;
+    display.startTransitionWrite();
 
 Then, use the normal drawing functions to make the screen you're going to transitionate.
 When you're done, use
@@ -76,7 +76,7 @@ When you're done, use
 To write the transition steps from 0 to 7. 
 Finally, use 
 
-    display.endTransition;
+    display.endTransition();
 
 to clear the memory used.
 

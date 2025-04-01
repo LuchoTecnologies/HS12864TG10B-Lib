@@ -59,7 +59,26 @@ This is a monochrome screen, so there are only two colors, black and white. You 
 you can change the contrast of the LCD whenever you want, just use 
 
     display.setContrast(88);
+
 It gets values from 0 to 255. 
+
+**Transition Effect**
+
+You can make transitions using
+
+    display.startTransitionWrite;
+
+Then, use the normal drawing functions to make the screen you're going to transitionate.
+When you're done, use
+
+    display.drawTransition(0);
+
+To write the transition steps from 0 to 7. 
+Finally, use 
+
+    display.endTransition;
+
+to clear the memory used.
 
 **Example Schematic**
 
